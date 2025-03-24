@@ -18,8 +18,14 @@ export class ProduitItemComponent {
   constructor(private router : Router, private panierService :PanierService) {
   }
 
-  onLoadViewDetail(id : number) {
-    this.router.navigateByUrl(`/catalogue/detail/${id}`);
+  async onLoadViewDetail(id : number) {
+    this.router.navigateByUrl(".", {
+      skipLocationChange: true,
+
+    }).then(() => {
+      this.router.navigate([`/catalogue/detail/${id}`])
+    });
+
   }
 
   protected readonly Array = Array;
