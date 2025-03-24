@@ -1,7 +1,7 @@
-<div class="container m-4 p-4 d-flex justify-content-center align-content-center">
-  <div class="card">
+<div class="m-4 p-4 d-flex justify-content-center align-content-center">
+  <div class="card w-75">
     <div class="card-header">
-      Liste des Commandes du client : {{this.authService.currentUserSignal()?.name}}
+      Liste des Commandes du client : {{this.clientWithCommandes?.client!.firstName}} {{this.clientWithCommandes?.client!.lastName}}
     </div>
     <div class="card-body">
       <table class="table ">
@@ -10,18 +10,25 @@
           <th scope="col">#</th>
           <th scope="col">Date</th>
           <th scope="col">Montant</th>
-          <th scope="col">Handle</th>
+          <th scope="col">Action</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>emdo</td>
-        </tr>
+          @for (command of clientWithCommandes?.commandes; track command.id){
+            <tr>
+              <th scope="row">{{command.id}}</th>
+              <td>{{ command.date }}</td>
+              <td>{{ command.montant }}</td>
+              <td>
+                <button class="btn btn-outline-dark">
+                  Details
+                </button>
+              </td>
+            </tr>
+          }
         </tbody>
       </table>
+      <ism-pagination [pages]="clientWithCommandes?.pages!" (onPageChange)="onPaginate($event)" />
     </div>
   </div>
 </div>

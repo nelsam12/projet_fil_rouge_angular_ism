@@ -31,9 +31,16 @@ export class NavComponent implements OnInit {
     // alert(this.authService.hasRole('Client'));
   }
 
-  onLogout() {
+  async onLogout() {
     this.authService.logout();
-    this.router.navigateByUrl('/catalogue');
+     this.router.navigateByUrl('.', {
+      skipLocationChange: true,
+    }).then(
+       () => {
+         this.router.navigate(['/catalogue']);
+       }
+     )
+     ;
   }
 }
 

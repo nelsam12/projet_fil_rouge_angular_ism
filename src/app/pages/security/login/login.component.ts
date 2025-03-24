@@ -4,6 +4,8 @@ import {NgIf} from '@angular/common';
 import {ActivatedRoute, Router, RouterLinkActive} from '@angular/router';
 import {AuthentificationMockService} from '../../../shared/services/impl/authentification-mock.service';
 import {LoginResponse} from '../../../shared/models/user.model';
+import {CommandeService} from '../../../shared/services/impl/commande.service';
+import {PanierService} from '../../../shared/services/impl/panier.service';
 
 @Component({
   selector: 'ism-login',
@@ -29,7 +31,9 @@ export class LoginComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private route: ActivatedRoute,
               private authService: AuthentificationMockService,
-              private router: Router) {
+              private router: Router,
+              private commandeService : CommandeService,
+              private panierService : PanierService) {
 
     this.formLogin2 = this.formBuilder.group({
       login: new FormControl('', [Validators.required, Validators.email]),
@@ -57,6 +61,11 @@ export class LoginComponent implements OnInit {
                 let query: string = params["link"]
                 if (query == "panier") {
                   // Ajoute la commande et rediriger
+                  this.commandeService.addCommande().subscribe(
+                    data => {
+                      console.log(data);
+                    }
+                  );
                 }
                 this.router.navigateByUrl("/catalogue/commandes");
               })
@@ -84,7 +93,13 @@ export class LoginComponent implements OnInit {
     // S'il est déjà authentifier on ajoute sa commande
     if (this.authService.isAuthenticated()) {
       // AddCommande
-      this.router.navigateByUrl('/catalogue')
+      if (this.authService.isClient() && this.panierService.panierSignal().produits.length > 0)
+      {
+        this.commandeService.addCommande().subscribe()
+        this.router.navigateByUrl("/catalogue/commandes");
+        return;
+      }
+      this.router.navigateByUrl('/catalogue');
       //Rediriger vers la page mes_commandes (liste de ses commandes)
     }
   }
