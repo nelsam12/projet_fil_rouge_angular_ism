@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
   formLogin2: FormGroup;
 
   errorMessage: string = "";
-  loading :boolean = true;
+
 
   constructor(private formBuilder: FormBuilder,
               private route: ActivatedRoute,
@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
   }
 
   private queryParams: string = "";
-
+  loading :boolean = false;
   onLogin() {
 
     if (this.formLogin.invalid) {
@@ -50,9 +50,7 @@ export class LoginComponent implements OnInit {
     this.authService.login(login, password).subscribe(
       {
         next: (response: LoginResponse) => {
-          alert("Next : ");
-          alert(this.loading);
-          this.loading = false;
+          this.loading = true;
           if (response && response.success) {
             if (response.data?.role == "Client") {
               this.route.queryParams.subscribe(params => {
@@ -73,9 +71,7 @@ export class LoginComponent implements OnInit {
           this.loading = false;
         },
         error: (err) => {
-          alert("Error : ");
-          alert(this.loading);
-          this.loading = false;
+          this.loading = true;
           this.errorMessage = err.error.message || "Problème Backend !";
         },
       }
