@@ -3,6 +3,7 @@ import {Router, RouterModule} from '@angular/router';
 import {PanierService} from '../../services/impl/panier.service';
 import {PanierCatalogue} from '../../models/catalogue.model';
 import {AuthentificationMockService} from '../../services/impl/authentification-mock.service';
+import {PUBLIC_ROUTES} from '../../routes/public';
 
 
 @Component({
@@ -13,7 +14,9 @@ import {AuthentificationMockService} from '../../services/impl/authentification-
 })
 export class NavComponent implements OnInit {
 
-  isClient : boolean = false;
+  // isClient : boolean = false;
+  // isAdmin : boolean = false;
+
 
   protected links: Link[] = [];
 
@@ -22,11 +25,14 @@ export class NavComponent implements OnInit {
 
   }
 
+
   ngOnInit(): void {
-    this.isClient = this.authService.hasRole('Client');
+    // this.isClient = ;
+    // this.isAdmin = this.authService.hasRole('Admin');
     this.links = [
-      { name: 'Catalogue', path: '/catalogue', class:"nav-link", ariaCurrent: 'page', isVisible:true},
-      { name: 'Mes Commandes', path: '/catalogue/commandes', class:"nav-link", ariaCurrent: 'page', isVisible:this.isClient},
+      { name: 'Catalogue', path: PUBLIC_ROUTES.CATALOGUES, class:"nav-link", ariaCurrent: 'page', isVisible:true},
+      { name: 'Mes Commandes', path: '/catalogue/commandes', class:"nav-link", ariaCurrent: 'page', isVisible:this.authService.hasRole('Client')},
+      { name: 'Commandes', path: '/catalogue/commandes', class:"nav-link", ariaCurrent: 'page', isVisible:this.authService.hasRole('Admin')},
     ]
     // alert(this.authService.hasRole('Client'));
   }

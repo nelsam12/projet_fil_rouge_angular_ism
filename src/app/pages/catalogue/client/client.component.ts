@@ -4,19 +4,20 @@ import {CommandeService} from '../../../shared/services/impl/commande.service';
 import {ClientWithCommandePaginateDto} from '../../../shared/models/commande.model';
 import {Router} from '@angular/router';
 import {PaginationComponent} from '../../../shared/components/pagination/pagination.component';
+import {RestResponseModel} from '../../../shared/models/rest-response.model';
+import {Observable} from 'rxjs';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'ism-client',
   imports: [
-    PaginationComponent
+    PaginationComponent, DatePipe
   ],
   templateUrl: './client.component.html',
   styleUrl: './client.component.css'
 })
 export class ClientComponent implements OnInit {
-  clientWithCommandes: ClientWithCommandePaginateDto | null = null;
-
-
+  response!: RestResponseModel<ClientWithCommandePaginateDto | null>;
 
   constructor(public authService: AuthentificationMockService,
               private commandeService: CommandeService,
@@ -40,13 +41,11 @@ export class ClientComponent implements OnInit {
   }
 
   private refresh(page: number = 0) {
-    this.commandeService.getCommandesConnectedClient(page).subscribe(
-      data => {
-        this.clientWithCommandes = data;
-        console.log(this.clientWithCommandes);
-      },
-      err => {
-        console.error("Error getting client withCommandes client", err);
+   let uri: string = this.authService.isClient() ? `commandes/client/${this.authService.currentUserSignal()?.id!}` : "commandes";
+    this.commandeService.getCommandeUserConnect(page, uri).subscribe(
+      {
+        next: data => this.response = data,
+        error: (err) => console.error("Error getting client withCommandes client", err),
       });
   }
 }

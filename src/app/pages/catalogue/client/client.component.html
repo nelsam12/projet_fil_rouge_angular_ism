@@ -1,7 +1,7 @@
 <div class="m-4 p-4 d-flex justify-content-center align-content-center">
   <div class="card w-75">
     <div class="card-header">
-      Liste des Commandes du client : {{this.clientWithCommandes?.client!.firstName}} {{this.clientWithCommandes?.client!.lastName}}
+      Liste des Commandes du client : {{this.response!.data!.client?.firstName}} {{this.response!.data!.client?.lastName}}
     </div>
     <div class="card-body">
       <table class="table ">
@@ -14,10 +14,10 @@
         </tr>
         </thead>
         <tbody>
-          @for (command of clientWithCommandes?.commandes; track command.id){
+          @for (command of response!.data?.commandes; track command.id){
             <tr>
               <th scope="row">{{command.id}}</th>
-              <td>{{ command.date }}</td>
+              <td>{{ command.date | date:'dd/MM/yyyy' }} </td>
               <td>{{ command.montant }}</td>
               <td>
                 <button class="btn btn-outline-dark">
@@ -28,7 +28,7 @@
           }
         </tbody>
       </table>
-      <ism-pagination [pages]="clientWithCommandes?.pages!" (onPageChange)="onPaginate($event)" />
+      <ism-pagination [pages]="response!.pages!" (onPageChange)="onPaginate($event)" />
     </div>
   </div>
 </div>

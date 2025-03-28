@@ -1,9 +1,10 @@
 import {Observable} from 'rxjs';
 import {ProduitDetail, ProduitCatalogue, CommandeCatalogue, PanierCatalogue} from '../models/catalogue.model';
 import {ClientWithCommandePaginateDto, Commande} from '../models/commande.model';
+import {RestResponseModel} from '../models/rest-response.model';
 
 export interface ICommandeService {
-  addCommande() : Observable<Commande>;
-  convertPanierToCommande(panier: PanierCatalogue) : CommandeCatalogue;
-  getCommandesConnectedClient(page:number, size:number) : Observable<ClientWithCommandePaginateDto>;
+  addCommande() : Observable<RestResponseModel<Commande>> ;
+  // convertPanierToCommande(panier: PanierCatalogue) : CommandeCatalogue;
+  getCommandeUserConnect(page:number,uri : string, size:number) : Observable<RestResponseModel<ClientWithCommandePaginateDto>>;
 }

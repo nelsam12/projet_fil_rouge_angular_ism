@@ -37,7 +37,6 @@ export class PanierService implements IPanierCatalogue {
   }
 
   deleteProduct(produit: ProduitCatalogue): void {
-
   }
 
   private initialize(): PanierCatalogue {

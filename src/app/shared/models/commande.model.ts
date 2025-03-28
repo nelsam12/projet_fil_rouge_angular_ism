@@ -13,9 +13,9 @@ export interface ClientSampleDto {
 export interface ClientWithCommandePaginateDto {
   client : ClientSampleDto;
   commandes : Commande[];
-  currentPage : number;
-  totalPages : number;
-  isFirst : boolean;
-  isLast : boolean;
-  pages : number[];
+  // currentPage : number;
+  // totalPages : number;
+  // isFirst : boolean;
+  // isLast : boolean;
+  // pages : number[];
 }

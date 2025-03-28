@@ -2,6 +2,7 @@ import {Component, inject, OnInit} from '@angular/core';
 import {ProduitItemComponent} from '../components/catalogue/produit-item/produit-item.component';
 import {CatalogueService} from '../../../shared/services/impl/catalogue.service';
 import {ProduitCatalogue} from '../../../shared/models/catalogue.model';
+import {RestResponseModel} from '../../../shared/models/rest-response.model';
 
 @Component({
   selector: 'ism-page-catalogue',
@@ -16,11 +17,13 @@ export class PageCatalogueComponent implements OnInit  {
   // constructor(private catalogueService : CatalogueService ) {
   // }
   private catalogueService:CatalogueService = inject(CatalogueService);
-  products : ProduitCatalogue[] = [];
+  response? : RestResponseModel<ProduitCatalogue[]> ;
   ngOnInit(): void {
-    this.catalogueService.getProductsCatalogues().subscribe(
-      data => this.products = data,
-      error => console.log(error)
+    this.catalogueService.getAll().subscribe(
+      {
+        next : data => this.response = data,
+        error : (err) => console.log(err)
+      }
     )
     // this.products = this.catalogueService.produits;
   }

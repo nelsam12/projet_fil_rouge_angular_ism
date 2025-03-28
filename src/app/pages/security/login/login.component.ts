@@ -32,8 +32,8 @@ export class LoginComponent implements OnInit {
               private route: ActivatedRoute,
               private authService: AuthentificationMockService,
               private router: Router,
-              private commandeService : CommandeService,
-              private panierService : PanierService) {
+              private commandeService: CommandeService,
+              private panierService: PanierService) {
 
     this.formLogin2 = this.formBuilder.group({
       login: new FormControl('', [Validators.required, Validators.email]),
@@ -42,7 +42,8 @@ export class LoginComponent implements OnInit {
   }
 
   private queryParams: string = "";
-  loading :boolean = false;
+  loading: boolean = false;
+
   onLogin() {
 
     if (this.formLogin.invalid) {
@@ -67,13 +68,11 @@ export class LoginComponent implements OnInit {
                     }
                   );
                 }
-                this.router.navigateByUrl("/catalogue/commandes");
               })
-            } else if (response.data?.role == "Admin") {
-
             }
-          }else{
-              this.errorMessage = response.message || "Login ou Mot de passe incorrect";
+            this.router.navigateByUrl("/catalogue/commandes");
+          } else {
+            this.errorMessage = response.message || "Login ou Mot de passe incorrect";
           }
         },
         complete: () => {
@@ -93,8 +92,7 @@ export class LoginComponent implements OnInit {
     // S'il est déjà authentifier on ajoute sa commande
     if (this.authService.isAuthenticated()) {
       // AddCommande
-      if (this.authService.isClient() && this.panierService.panierSignal().produits.length > 0)
-      {
+      if (this.authService.isClient() && this.panierService.panierSignal().produits.length > 0) {
         this.commandeService.addCommande().subscribe()
         this.router.navigateByUrl("/catalogue/commandes");
         return;

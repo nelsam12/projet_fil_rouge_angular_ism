@@ -4,6 +4,7 @@ import { CatalogueService } from '../../../shared/services/impl/catalogue.servic
 import { ProduitDetail } from '../../../shared/models/catalogue.model';
 import { ProduitItemComponent } from "../components/catalogue/produit-item/produit-item.component";
 import {PanierService} from '../../../shared/services/impl/panier.service';
+import {RestResponseModel} from '../../../shared/models/rest-response.model';
 
 @Component({
   selector: 'ism-page-detail',
@@ -16,7 +17,7 @@ export class PageDetailComponent implements OnInit{
   constructor(private route: ActivatedRoute, private catalogueService: CatalogueService, private panierService: PanierService){
   }
 
-  produitDetail? : ProduitDetail
+  response? : RestResponseModel<ProduitDetail>
   errorMessage : String = "";
   qteCom : number = 0;
   disabledButton : boolean = true;
@@ -25,23 +26,23 @@ export class PageDetailComponent implements OnInit{
   ngOnInit(): void {
     let id = this.route.snapshot.params['product_id']
     this.catalogueService.getProductDetailCatalogue(id).subscribe(
-      data => {
-        this.produitDetail = data
-        // console.log(data.relatedProducts)
-      },
-      error => console.log(error)
+      {
+        next :  data => {
+          this.response = data
+        },
+        error : (err) => console.log(err)
+      }
     )
   }
 
   onValidateQte( qte: string){
-    console.log(this.produitDetail?.produit.quantiteStock)
     if (qte === ""){
       this.errorMessage = "Ce champ est obligatoire"
     }else if(isNaN(Number(qte))){
       this.errorMessage = "Ce champ doit être un nombre"
     }else if(Number(qte) <= 0){
       this.errorMessage = "Ce champ doit être positif"
-    } else if(Number(qte) > this.produitDetail!.produit.quantiteStock){
+    } else if(Number(qte) > this.response!.data.produit.quantiteStock){
       this.errorMessage = "Cette quantité ne peut pas dépasser la quantité en stock"
     }else{
       this.errorMessage = "";
@@ -68,7 +69,7 @@ export class PageDetailComponent implements OnInit{
 
   onAddPanier() {
     this.panierService.addProduct({
-      ...this.produitDetail?.produit!,
+      ...this.response!.data.produit,
       quantiteCom : this.qteCom
     })
   }
